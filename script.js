@@ -25,6 +25,11 @@
   }
 
   function encrypt() {
+    //TODO:
+    // - Vérifier les tailles d'image :
+    //      - si la source est plus petite, dire qu'il va y avoir des problemes
+    //      - si les deux fichiers sont de taille différente, dire que ça va foutre la merde
+    
     for (var containerImagePixel of containerImage.values()) {
       var x = containerImagePixel.getX(); 
       var y = containerImagePixel.getY(); 
