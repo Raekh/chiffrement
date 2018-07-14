@@ -1,11 +1,10 @@
-
 var source = null; 
 var secret = null; 
 var containerImage = null; 
 var shiftImage = null; 
 var firstCanvas; 
 var secondCanvas;
-var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz&éèçà!?,.;:/\'\"-()[]@_ ';
+var endSymbol = '|';
 
 function loadSource () {
   var fileinput = document.getElementById("sourceInput"); 
@@ -26,7 +25,8 @@ function loadSecret () {
 }
 
 function text2Binary(string) {
-  var input = unescape(encodeURIComponent(string));
+  // var input = unescape(encodeURIComponent(string+'|'));
+  var input = string+endSymbol;
   var arr = [];
   var arr2 = [];
   for (var i = 0; i < input.length; i++) {
@@ -115,7 +115,8 @@ function extract_t(){
     var letter2 = containerImagePixel.getGreen()%16;
 
     var newLetter = String.fromCharCode(parseInt(letter1.toString(2).padStart(4,'0')+letter2.toString(2).padStart(4,'0'),2));
-    if(alphabet.indexOf(newLetter)<0){
+    console.log(newLetter);
+    if(newLetter == endSymbol){
       break;
     }
     
