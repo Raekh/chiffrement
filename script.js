@@ -25,14 +25,12 @@ function loadSecret () {
 }
 
 function text2Binary(string) {
-  // var input = unescape(encodeURIComponent(string+'|'));
   var input = string+endSymbol;
   var arr = [];
   var arr2 = [];
   for (var i = 0; i < input.length; i++) {
     arr.push(input.charCodeAt(i).toString(2).padStart(8,'0'));
   }
-  console.log(arr);
   return arr;
 }
 
