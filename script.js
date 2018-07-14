@@ -37,55 +37,61 @@ function text2Binary(string) {
 }
 
 function encrypt() {
-  //TODO:
-  // - Vérifier les tailles d'image :
-  //      - si la source est plus petite, dire qu'il va y avoir des problemes
-  //      - si les deux fichiers sont de taille différente, dire que ça va foutre la merde
-  
-  for (var containerImagePixel of containerImage.values()) {
-    var x = containerImagePixel.getX(); 
-    var y = containerImagePixel.getY(); 
-    var hiddenShift = shiftImage.getPixel(x, y); 
-    
-    var existingRed = Math.floor(containerImagePixel.getRed()/16) * 16; 
-    var existingGreen = Math.floor(containerImagePixel.getGreen()/16) * 16; 
-    var existingBlue = Math.floor(containerImagePixel.getBlue()/16) * 16; 
-    
-    var newRed = Math.floor(hiddenShift.getRed()/16); 
-    var newGreen = Math.floor(hiddenShift.getGreen()/16); 
-    var newBlue = Math.floor(hiddenShift.getBlue()/16); 
-    
-    containerImagePixel.setRed(existingRed + newRed); 
-    containerImagePixel.setGreen(existingGreen + newGreen); 
-    containerImagePixel.setBlue(existingBlue + newBlue); 
+
+  if(containerImage.height != shiftImage.height || containerImage.width != shiftImage.width){
+    alert("Veuillez choisir des images avec des tailles identiques.");
+  } else{ 
+    for (var containerImagePixel of containerImage.values()) {
+      var x = containerImagePixel.getX(); 
+      var y = containerImagePixel.getY(); 
+      var hiddenShift = shiftImage.getPixel(x, y); 
+      
+      var existingRed = Math.floor(containerImagePixel.getRed()/16) * 16; 
+      var existingGreen = Math.floor(containerImagePixel.getGreen()/16) * 16; 
+      var existingBlue = Math.floor(containerImagePixel.getBlue()/16) * 16; 
+      
+      var newRed = Math.floor(hiddenShift.getRed()/16); 
+      var newGreen = Math.floor(hiddenShift.getGreen()/16); 
+      var newBlue = Math.floor(hiddenShift.getBlue()/16); 
+      
+      containerImagePixel.setRed(existingRed + newRed); 
+      containerImagePixel.setGreen(existingGreen + newGreen); 
+      containerImagePixel.setBlue(existingBlue + newBlue); 
+    }
+    containerImage.drawTo(secondCanvas); 
+    secondCanvas.classList.add("changed");
   }
-  containerImage.drawTo(secondCanvas); 
 }
 
 function encrypt_t(){
   var textToHide = document.getElementById('textToHide');
   var binaryData = text2Binary(textToHide.value);
-  var count = 0;
-  for(var containerImagePixel of containerImage.values()){  
-    if(count == binaryData.length){
-      break;
+  if(containerImage.height*containerImage.width < binaryData.length){
+    alert("Votre texte contient plus de caractères que votre image n'a de pixels.");
+  } else {
+    var count = 0;
+    for(var containerImagePixel of containerImage.values()){  
+      if(count == binaryData.length){
+        break;
+      }
+      
+      var x = containerImagePixel.getX(); 
+      var y = containerImagePixel.getY(); 
+      
+      var existingRed = Math.floor(containerImagePixel.getRed()/16) * 16; 
+      var existingGreen = Math.floor(containerImagePixel.getGreen()/16) * 16; 
+      
+      var newRed = parseInt(binaryData[count].substring(0,4),2);
+      var newGreen = parseInt(binaryData[count].substring(4,8),2);
+      
+      containerImagePixel.setRed(existingRed + newRed);
+      containerImagePixel.setGreen(existingGreen + newGreen);
+      
+      count++;
     }
-
-    var x = containerImagePixel.getX(); 
-    var y = containerImagePixel.getY(); 
-    
-    var existingRed = Math.floor(containerImagePixel.getRed()/16) * 16; 
-    var existingGreen = Math.floor(containerImagePixel.getGreen()/16) * 16; 
-    
-    var newRed = parseInt(binaryData[count].substring(0,4),2);
-    var newGreen = parseInt(binaryData[count].substring(4,8),2);
-    
-    containerImagePixel.setRed(existingRed + newRed);
-    containerImagePixel.setGreen(existingGreen + newGreen);
-    
-    count++;
+    containerImage.drawTo(firstCanvas);
+    firstCanvas.classList.add("changed");
   }
-  containerImage.drawTo(firstCanvas);
 }
 
 function extract() {
@@ -103,23 +109,26 @@ function extract() {
     hiddenShift.setGreen(Green); 
     hiddenShift.setBlue(Blue); 
   }
-  shiftImage.drawTo(firstCanvas); 
+  shiftImage.drawTo(firstCanvas);
+  firstCanvas.classList.add("changed");
 }
 
 function extract_t(){
   shiftImage = new SimpleImage(containerImage);
   var dest = document.getElementById('dest');
+  var message = "";
   dest.innerHTML = '';
   for(var containerImagePixel of containerImage.values()){
     var letter1 = containerImagePixel.getRed()%16;
     var letter2 = containerImagePixel.getGreen()%16;
-
+    
     var newLetter = String.fromCharCode(parseInt(letter1.toString(2).padStart(4,'0')+letter2.toString(2).padStart(4,'0'),2));
-    console.log(newLetter);
     if(newLetter == endSymbol){
       break;
     }
     
-    dest.innerHTML += newLetter;
+    message += newLetter;
   }
+  dest.innerHTML = message;
+  dest.classList.add("changed");
 }

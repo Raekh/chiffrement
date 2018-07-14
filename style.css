@@ -44,6 +44,10 @@ canvas{
     text-align: center;
 }
 
+.changed{
+    border: dotted 3px #474544 !important;
+}
+
 .tiltedleft{
     -moz-transform:rotate(-5deg);
     -webkit-transform:rotate(-5deg);
