@@ -30,6 +30,9 @@ input {
 
 textarea {
     overflow: auto;
+    max-height: 250px;
+    max-width: 300px;
+    border: solid 3px #474544 !important;
 }
 
 canvas{
@@ -128,6 +131,10 @@ input[type='text'], [type='email'], select, textarea {
 input[type='text']:focus, [type='email']:focus, textarea:focus {
 	outline: none;
 	padding: 0 0 0.875em 0;
+}
+
+textarea{
+    text-transform:none !important;
 }
 
 .message {
