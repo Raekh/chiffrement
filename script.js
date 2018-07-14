@@ -123,10 +123,3 @@ function extract_t(){
     dest.innerHTML += newLetter;
   }
 }
-
-function test(){
-  var isModeEncryption = document.getElementById('mode').checked;
-  if(!isModeEncryption){
-    document.getElementById('secondCanvas').css('display','none');
-  }
-}
